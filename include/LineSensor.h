@@ -15,7 +15,7 @@ public:
     void calibrate();
     unsigned int readLine();
     void detectLine();
-    const unsigned int* getValues() const;
+    unsigned int* getValues() const;
 };
 
 #endif // LINESENSOR_H
