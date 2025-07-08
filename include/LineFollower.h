@@ -4,25 +4,28 @@
 #include "MotorController.h"
 #include "LineSensor.h"
 
+/**
+ * Volgt lijn met PID-regeling.
+ */
 class LineFollower {
 private:
-    MotorController* motorController;
-    LineSensor* lineSensor;
+    MotorController* motorController; // bestuurt 2 motoren
+    LineSensor* lineSensor;           // leest lijnsensoren
 
-    float Kp;
-    float Ki;
-    float Kd;
+    float Kp;  // PID P-factor
+    float Ki;  // PID I-factor
+    float Kd;  // PID D-factor
 
-    const int baseSpeed;
-    const int maxSpeed;
+    const int baseSpeed; // standaard snelheid
+    const int maxSpeed;  // limiet snelheid
 
-    long lastError;
-    float integral;
+    long lastError;      // vorige fout voor D
+    float integral;      // opgetelde fout voor I
 
 public:
     LineFollower(MotorController* m, LineSensor* l);
 
-    void followLine();
+    void followLine(); // lees sensor, stuur motor
 };
 
 #endif // LINEFOLLOWER_H

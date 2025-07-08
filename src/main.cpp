@@ -1,29 +1,40 @@
-#include <Arduino.h>
-#include <Zumo32U4.h>
-#include "MotorController.h"
 #include "LineSensor.h"
-#include "LineFollower.h"
+#include <Arduino.h>
 
-Zumo32U4Motors motors;
-MotorController motorController(&motors, 150);
-LineSensor lineSensor;
-LineFollower lineFollower(&motorController, &lineSensor);
-
-void setup() {
-  Serial.begin(9600);
-  delay(2000);
-  Serial.println("Starting calibration...");
-
-  lineSensor.calibrate();
-
-  Serial.println("Calibration complete. Waiting...");
-  delay(5000); // extra 5 seconden pauze om hem neer te zetten
-  Serial.println("Starting line following...");
+/**
+ * Initialiseert 5 lijnsensoren.
+ */
+LineSensor::LineSensor() {
+    lineSensors.initFiveSensors();
 }
 
+/**
+ * Kalibreert sensor op zwart/wit.
+ */
+void LineSensor::calibrate() {
+    for (int i = 0; i < 100; i++) {
+        lineSensors.calibrate();
+        delay(20);
+    }
+}
 
+/**
+ * Leest actuele waarden in array.
+ */
+void LineSensor::detectLine() {
+    lineSensors.read(lineSensorValues);
+}
 
-void loop() {
-  lineFollower.followLine();
-  delay(50);  // kleine vertraging voor stabiliteit
+/**
+ * Geeft lijnpositie 0–4000.
+ */
+unsigned int LineSensor::readLine() {
+    return lineSensors.readLine(lineSensorValues);
+}
+
+/**
+ * Retourneert pointer naar waarden.
+ */
+const unsigned int* LineSensor::getValues() const {
+    return lineSensorValues;
 }
